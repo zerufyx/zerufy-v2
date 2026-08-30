@@ -369,10 +369,13 @@ function pImgs(p){ return (p.images&&p.images.length) ? p.images : (p.image_url?
 /* ---------- CARGA ---------- */
 async function loadAll(){
   try{
-    var rs = await sb.from('stores').select('*').eq('id', STORE_ID).single();
-    var rc = await sb.from('categories').select('*').eq('store_id', STORE_ID).order('position');
-    var rp = await sb.from('products').select('*').eq('store_id', STORE_ID).eq('hidden', false).order('position');
-    var rv = await sb.from('product_variants').select('*').eq('store_id', STORE_ID).order('position');
+    var results = await Promise.all([
+      sb.from('stores').select('*').eq('id', STORE_ID).single(),
+      sb.from('categories').select('*').eq('store_id', STORE_ID).order('position'),
+      sb.from('products').select('*').eq('store_id', STORE_ID).eq('hidden', false).order('position'),
+      sb.from('product_variants').select('*').eq('store_id', STORE_ID).order('position')
+    ]);
+    var rs = results[0], rc = results[1], rp = results[2], rv = results[3];
 
     if (rs.error) throw rs.error;
     store = rs.data;
@@ -519,7 +522,7 @@ function renderCatalog(){
         if (p.discount_price && p.price) html += '<div><span class="card-price-old">$'+p.price+'</span><span class="card-price">$'+p.discount_price+'</span></div>';
         else if (p.price) html += '<div class="card-price">$'+p.price+'</div>';
         else html += '<div class="card-price no-price">'+t('askPrice')+'</div>';
-        if (!p.sold_out) html += '<button class="card-cart-btn" onclick="event.stopPropagation();quickCart('+p.id+')">'+t('addCart')+'</button>';
+        if (!p.sold_out) html += '<button class="card-cart-btn" id="cb2-'+p.id+'" onclick="event.stopPropagation();quickCart('+p.id+')">'+t('addCart')+'</button>';
         html += '</div></div></div>';
       });
     }
@@ -597,6 +600,10 @@ function openModal(id){
     chipsEl.innerHTML = p.sizes.map(function(s){ return '<button class="size-chip" data-s="'+s+'" onclick="selectSize(this)">'+s+'</button>'; }).join('');
   } else sizesEl.style.display='none';
 
+  // Selecciona la primera talla disponible por defecto, igual que el original
+  var firstOk = chipsEl.querySelector('.size-chip:not([disabled])');
+  if (firstOk){ firstOk.classList.add('active'); curSizeSel = firstOk.dataset.s; }
+
   var fotoLink = mSrcs.length ? mSrcs[0] : '';
   var precioTxt = p.price ? ' — $'+(p.discount_price||p.price) : '';
   var msg;
@@ -646,6 +653,14 @@ function quickCart(id){
   var price = parseFloat(p.discount_price||p.price||0);
   cart.push({cartId:Date.now(), pid:p.id, name:p.name, cat:cat?catLabel(cat.name):'', size:null, price:price, pd:price?'$'+price:t('askPrice'), foto:(pImgs(p)[0]||'')});
   cartRender();
+  var btn = document.getElementById('cb2-'+id);
+  if (btn){
+    var original = btn.textContent;
+    btn.textContent = '✓';
+    btn.style.background = 'var(--red)';
+    btn.style.color = '#fff';
+    setTimeout(function(){ btn.textContent = original; btn.style.background = ''; btn.style.color = ''; }, 1000);
+  }
 }
 
 function modalCart(){
