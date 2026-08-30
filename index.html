@@ -276,7 +276,7 @@ footer{border-top:1px solid rgba(255,255,255,.05);padding:3rem 2rem;text-align:c
         <label class="chk-label" id="chkAddrLbl">Dirección de envío</label>
         <textarea id="chkAddr" placeholder="Calle, ciudad, estado y código postal"></textarea>
       </div>
-      <div id="chkPickBox" style="display:none" class="chk-note" id="chkPickNote">Coordinamos el lugar y la hora por WhatsApp.</div>
+      <div id="chkPickBox" style="display:none" class="chk-note">Coordinamos el lugar y la hora por WhatsApp.</div>
 
       <div class="chk-err" id="chkErr">Completa tu nombre, teléfono y cómo lo quieres recibir.</div>
 
@@ -459,7 +459,7 @@ function updateTexts(){
   document.getElementById('chkPickTi').textContent = t('chkPickTi');
   document.getElementById('chkPickSu').textContent = t('chkPickSu');
   document.getElementById('chkAddrLbl').textContent = t('chkAddr');
-  document.getElementById('chkPickNote').textContent = t('chkPickNote');
+  document.getElementById('chkPickBox').textContent = t('chkPickNote');
   document.getElementById('chkErr').textContent = t('chkErr');
   document.getElementById('chkSubmitBtn').textContent = t('chkSubmit');
   document.getElementById('chkBack').textContent = t('chkBack');
