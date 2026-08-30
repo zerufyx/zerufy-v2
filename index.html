@@ -146,8 +146,7 @@ html,body{background:#000;color:#fff;font-family:'Montserrat',sans-serif;font-we
 .cart-total-label{font-size:.6rem;letter-spacing:.25em;color:var(--gray);text-transform:uppercase;}
 .cart-total-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--red);}
 .cart-action{width:100%;border:none;border-radius:3px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:.85rem;margin-bottom:.5rem;display:flex;align-items:center;justify-content:center;gap:.5rem;}
-.cart-action-ask{background:none;border:1px solid rgba(232,53,42,.4);color:var(--red);}
-.cart-action-order{background:#111;border:1px solid rgba(255,255,255,.15);color:#fff;}
+.cart-action-order{background:var(--red);border:1px solid var(--red);color:#fff;}
 
 footer{border-top:1px solid rgba(255,255,255,.05);padding:3rem 2rem;text-align:center;}
 .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--red);letter-spacing:.2em;margin-bottom:.5rem;}
@@ -244,7 +243,6 @@ footer{border-top:1px solid rgba(255,255,255,.05);padding:3rem 2rem;text-align:c
           <span class="cart-total-label" id="cartTotalLabel">Total Estimado</span>
           <span class="cart-total-val" id="cartTotalVal">$0</span>
         </div>
-        <button class="cart-action cart-action-ask" onclick="cartAsk()" id="cartAskBtn">💬 Consultar disponibilidad</button>
         <button class="cart-action cart-action-order" onclick="showCheckout()" id="cartOrderBtn">📱 Enviar Pedido por WhatsApp</button>
       </div>
     </div>
@@ -354,9 +352,9 @@ function catLabel(name){
 }
 
 var T = {
-  en:{heroTag:'Exclusive Collection',heroScroll:'Scroll to see the catalog',footerSub:'Accessories & Fashion',cartLabel:'Cart',cartTitle:'My Cart',cartEmpty:'Your cart is empty',cartTotalLabel:'Estimated Total',cartAsk:'💬 Ask about availability',cartOrder:'📱 Send Order via WhatsApp',newCol:'New Collection',comingSoon:'Coming soon',askPrice:'Ask for price',soldOut:'Sold Out',addCart:'+ Cart',sizes:'Sizes / Measurements',navAll:'All',
+  en:{heroTag:'Exclusive Collection',heroScroll:'Scroll to see the catalog',footerSub:'Accessories & Fashion',cartLabel:'Cart',cartTitle:'My Cart',cartEmpty:'Your cart is empty',cartTotalLabel:'Estimated Total',cartOrder:'📱 Send Order via WhatsApp',newCol:'New Collection',comingSoon:'Coming soon',askPrice:'Ask for price',soldOut:'Sold Out',addCart:'+ Cart',sizes:'Sizes / Measurements',navAll:'All',
      chkName:'Full name',chkPhone:'Phone',chkHow:'How do you want it?',chkShipTi:'Shipping',chkShipSu:'To your address',chkPickTi:'In person',chkPickSu:'We arrange it',chkAddr:'Shipping address',chkPickNote:'We arrange the place and time on WhatsApp.',chkErr:'Fill in your name, phone and how you want it.',chkSubmit:'Confirm and send',chkBack:'← Back',chkDoneTitle:'Order received!',chkDoneSub:'Save your order number. We\u2019ll take you to WhatsApp to arrange payment.',chkWa:'Continue on WhatsApp',chkSending:'Sending...'},
-  es:{heroTag:'Colección Exclusiva',heroScroll:'Desliza para ver el catálogo',footerSub:'Accesorios & Moda',cartLabel:'Carrito',cartTitle:'Mi Carrito',cartEmpty:'Tu carrito está vacío',cartTotalLabel:'Total Estimado',cartAsk:'💬 Consultar disponibilidad',cartOrder:'📱 Enviar Pedido por WhatsApp',newCol:'Nueva Colección',comingSoon:'Próximamente',askPrice:'Consultar precio',soldOut:'Agotado',addCart:'+ Carrito',sizes:'Tallas / Medidas',navAll:'Todo',
+  es:{heroTag:'Colección Exclusiva',heroScroll:'Desliza para ver el catálogo',footerSub:'Accesorios & Moda',cartLabel:'Carrito',cartTitle:'Mi Carrito',cartEmpty:'Tu carrito está vacío',cartTotalLabel:'Total Estimado',cartOrder:'📱 Enviar Pedido por WhatsApp',newCol:'Nueva Colección',comingSoon:'Próximamente',askPrice:'Consultar precio',soldOut:'Agotado',addCart:'+ Carrito',sizes:'Tallas / Medidas',navAll:'Todo',
      chkName:'Nombre completo',chkPhone:'Teléfono',chkHow:'¿Cómo lo quieres recibir?',chkShipTi:'Envío',chkShipSu:'A tu dirección',chkPickTi:'Personal',chkPickSu:'Lo coordinamos',chkAddr:'Dirección de envío',chkPickNote:'Coordinamos el lugar y la hora por WhatsApp.',chkErr:'Completa tu nombre, teléfono y cómo lo quieres recibir.',chkSubmit:'Confirmar y enviar',chkBack:'← Volver',chkDoneTitle:'¡Pedido recibido!',chkDoneSub:'Guarda tu número de pedido. Ahora te llevamos a WhatsApp para coordinar el pago.',chkWa:'Continuar en WhatsApp',chkSending:'Enviando...'}
 };
 function t(k){ return T[lang][k]||T.en[k]||k; }
@@ -452,7 +450,6 @@ function updateTexts(){
   document.getElementById('cartTitle').textContent = t('cartTitle');
   document.getElementById('cartEmpty').textContent = t('cartEmpty');
   document.getElementById('cartTotalLabel').textContent = t('cartTotalLabel');
-  document.getElementById('cartAskBtn').textContent = t('cartAsk');
   document.getElementById('cartOrderBtn').textContent = t('cartOrder');
   document.getElementById('chkNameLbl').textContent = t('chkName');
   document.getElementById('chkPhoneLbl').textContent = t('chkPhone');
@@ -725,12 +722,6 @@ function buildMsg(intro, outro){
   var out = m+'\nTotal: '+(tt?'$'+tt:'TBD')+'\n\n'+outro;
   if (links) out += '\n\n──────────\n'+ref+'\n'+links;
   return out;
-}
-
-function cartAsk(){
-  var intro = lang==='es' ? 'Hola '+store.name+'! Quiero consultar:\n\n' : 'Hi '+store.name+'! Checking availability:\n\n';
-  var outro = lang==='es' ? '¿Están disponibles?' : 'Are these available?';
-  window.open('https://wa.me/'+store.whatsapp+'?text='+encodeURIComponent(buildMsg(intro,outro)), '_blank');
 }
 
 /* ---------- NUEVO: enviar pedido con registro + WhatsApp ---------- */
